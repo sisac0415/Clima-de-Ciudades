@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima de Ciudades de Colombia</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #20232a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Contenedor principal */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        /* Estilos de la tarjeta */
+        .card {
+            background-color: #282c34;
+            border-radius: 8px;
+            padding: 1rem;
+            width: 300px;
+            text-align: left;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+        }
+
+        .card p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Clima de Ciudades de Colombia</h1>
+<div id="cardsContainer" class="cards-container"></div>
+
+<script>
+    async function fetchCitiesInfo() {
+        const cardsContainer = document.getElementById('cardsContainer');
+        
+        try {
+            const response = await fetch('/api/ciudades');  // Apunta a la ruta local
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            const cities = await response.json();
+            displayCityCards(cities);
+        } catch (error) {
+            cardsContainer.innerHTML = "<p>Error al cargar las ciudades.</p>";
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    function displayCityCards(cities) {
+        const cardsContainer = document.getElementById('cardsContainer');
+        cities.forEach(city => {
+            const cityCard = `
+                <div class="card">
+                    <h2>${city.nombre}</h2>
+                    <p><strong>Clima:</strong> ${city.clima}</p>
+                    <p><strong>Temperatura promedio:</strong> ${city.temperatura} °C</p>
+                </div>
+            `;
+            cardsContainer.innerHTML += cityCard;
+        });
+    }
+
+    // Llama a la función al cargar la página
+    fetchCitiesInfo();
+</script>
+
+</body>
+</html>
